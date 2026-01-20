@@ -209,8 +209,8 @@
                     <div id="loginAlert"></div>
                     <form id="loginForm">
                         <div class="mb-3">
-                            <label class="form-label">Email Address</label>
-                            <input type="email" class="form-control" id="loginEmail" placeholder="your@email.com" required>
+                            <label class="form-label">Username or Email</label>
+                            <input type="text" class="form-control" id="loginUsernameEmail" placeholder="username or email@example.com" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Password</label>
@@ -305,7 +305,7 @@
         // Login Form Handler
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
+            const usernameEmail = document.getElementById('loginUsernameEmail').value;
             const password = document.getElementById('loginPassword').value;
             const alertDiv = document.getElementById('loginAlert');
 
@@ -313,15 +313,30 @@
                 const response = await fetch('assets/api/auth/login_api.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
+                    body: JSON.stringify({ username_or_email: usernameEmail, password })
                 });
 
                 const data = await response.json();
 
                 if (data.success) {
                     alertDiv.innerHTML = '<div class="alert alert-success">Login successful! Redirecting...</div>';
+                    
+                    // Determine redirect URL based on role
+                    let redirectUrl = 'index.php';
+                    const role = data.user.role;
+
+                    if (role === 'admin') {
+                        redirectUrl = 'admin/admin.php';
+                    } else if (role === 'dentist') {
+                        redirectUrl = 'doctor/doctor.php';
+                    } else if (role === 'receptionist') {
+                        redirectUrl = 'secretary/secretary.php';
+                    } else if (role === 'patient') {
+                        redirectUrl = 'patient/patient.php';
+                    }
+
                     setTimeout(() => {
-                        window.location.href = data.user.role + '/index.php';
+                        window.location.href = redirectUrl;
                     }, 1000);
                 } else {
                     alertDiv.innerHTML = `<div class="alert alert-danger">${data.message || 'Login failed'}</div>`;

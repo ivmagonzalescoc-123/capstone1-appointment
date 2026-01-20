@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 20, 2026 at 03:39 PM
+-- Generation Time: Jan 20, 2026 at 04:02 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -144,6 +144,13 @@ CREATE TABLE `patients` (
   `added_by` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `patients`
+--
+
+INSERT INTO `patients` (`patient_id`, `first_name`, `last_name`, `middle_name`, `username`, `password_hash`, `date_of_birth`, `gender`, `phone_number`, `email`, `address`, `created_at`, `added_by`) VALUES
+(1, 'John', 'Smith', 'Robert', 'patient1', 'patient123', '1990-05-15', 'Male', '5551234567', 'patient1@example.com', '321 Patient Road', '2026-01-20 22:57:04', NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -186,9 +193,19 @@ CREATE TABLE `prescriptions` (
 
 CREATE TABLE `role` (
   `role_id` int(11) NOT NULL,
-  `role_name` enum('admin','dentist','hygienist','receptionist','lab','patient') DEFAULT 'patient',
+  `role_name` enum('admin','doctor','secretary','patient') DEFAULT NULL,
   `description` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `role`
+--
+
+INSERT INTO `role` (`role_id`, `role_name`, `description`) VALUES
+(1, 'admin', 'Administrator with full system access'),
+(2, 'doctor', 'Doctor/Dentist - Can manage appointments and patient data'),
+(3, 'secretary', 'Secretary/Receptionist - Can schedule appointments and manage front desk'),
+(4, 'patient', 'Patient - Can view appointments and medical records');
 
 -- --------------------------------------------------------
 
@@ -368,6 +385,15 @@ CREATE TABLE `users` (
   `role_id` int(11) DEFAULT NULL,
   `added_by` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`user_id`, `first_name`, `last_name`, `middle_name`, `username`, `password_hash`, `date_of_birth`, `gender`, `phone_number`, `email`, `address`, `is_active`, `created_at`, `specialization_id`, `role_id`, `added_by`) VALUES
+(1, 'Admin', 'User', NULL, 'admin', 'admin123', '1980-01-15', 'Male', '1234567890', 'admin@dentalclinic.com', '123 Admin Street', 1, '2026-01-20 22:57:04', NULL, 1, NULL),
+(2, 'Dr. John', 'Dentist', 'Michael', 'doctor', 'doctor123', '1985-05-20', 'Male', '0987654321', 'doctor@dentalclinic.com', '456 Doctor Avenue', 1, '2026-01-20 22:57:04', NULL, 2, NULL),
+(3, 'Mary', 'Secretary', 'Jane', 'secretary', 'secretary123', '1990-08-10', 'Female', '1112223333', 'secretary@dentalclinic.com', '789 Secretary Lane', 1, '2026-01-20 22:57:04', NULL, 3, NULL);
 
 -- --------------------------------------------------------
 
@@ -628,7 +654,7 @@ ALTER TABLE `medical_history`
 -- AUTO_INCREMENT for table `patients`
 --
 ALTER TABLE `patients`
-  MODIFY `patient_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `patient_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `payment`
@@ -646,7 +672,7 @@ ALTER TABLE `prescriptions`
 -- AUTO_INCREMENT for table `role`
 --
 ALTER TABLE `role`
-  MODIFY `role_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `role_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `schedule`
@@ -718,7 +744,7 @@ ALTER TABLE `treatments`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `user_access_modules`

@@ -1,3 +1,7 @@
+<?php
+include '../config/session_check.php';
+check_session(['dentist']);
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -110,7 +114,7 @@
                             <hr class="dropdown-divider">
                         </li>
                         <li>
-                            <a class="dropdown-item d-flex align-items-center" href="doctor.php?logout=1">
+                            <a class="dropdown-item d-flex align-items-center" href="#" onclick="logout()">
                                 <i class="bi bi-box-arrow-right"></i>
                                 <span>Sign Out</span>
                             </a>
@@ -236,6 +240,19 @@
                 }
             });
         });
+
+        // Logout function
+        function logout() {
+            fetch('../assets/api/auth/logout_api.php', {
+                method: 'POST'
+            }).then(response => response.json())
+            .then(data => {
+                window.location.href = '../index.php';
+            }).catch(error => {
+                console.error('Logout error:', error);
+                window.location.href = '../index.php';
+            });
+        }
     </script>
 
 </body>
