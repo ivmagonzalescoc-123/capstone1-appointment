@@ -392,7 +392,7 @@
                 if (data.success) {
                     alertDiv.innerHTML = '<div class="alert alert-success">Account created successfully! Redirecting...</div>';
                     setTimeout(() => {
-                        window.location.href = 'patient/index.php';
+                        window.location.href = 'patient/patient.php';
                     }, 1500);
                 } else {
                     alertDiv.innerHTML = `<div class="alert alert-danger">${data.message || 'Registration failed'}</div>`;
@@ -419,4 +419,3 @@
     </script>
 </body>
 </html>
-<?php $conn->close(); ?>
