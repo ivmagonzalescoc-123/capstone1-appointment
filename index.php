@@ -1,5 +1,25 @@
 <?php
+session_start();
 require_once 'config/database.php';
+
+// Redirect logged-in users to their respective dashboard
+if (isset($_SESSION['user_id']) || isset($_SESSION['patient_id'])) {
+    $role = $_SESSION['role'] ?? '';
+    
+    if ($role === 'admin') {
+        header('Location: admin/admin.php');
+        exit;
+    } elseif ($role === 'dentist') {
+        header('Location: doctor/doctor.php');
+        exit;
+    } elseif ($role === 'secretary') {
+        header('Location: secretary/secretary.php');
+        exit;
+    } elseif ($role === 'patient') {
+        header('Location: patient/patient.php');
+        exit;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -315,7 +335,7 @@ require_once 'config/database.php';
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <select class="form-control" id="registerGender" required>
+                                    <select class="form-control" id="registerGender" name="gender" required>
                                         <option value="">Select</option>
                                         <option value="Male">Male</option>
                                         <option value="Female">Female</option>

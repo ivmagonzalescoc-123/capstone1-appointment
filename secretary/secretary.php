@@ -1,6 +1,6 @@
 <?php
 include '../config/session_check.php';
-check_session(['receptionist']);
+check_session(['secretary']);
 ?>
 
 <!DOCTYPE html>

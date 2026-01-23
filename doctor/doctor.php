@@ -1,6 +1,6 @@
 <?php
 include '../config/session_check.php';
-check_session(['dentist']);
+check_session(['doctor']);
 ?>
 
 <!DOCTYPE html>
