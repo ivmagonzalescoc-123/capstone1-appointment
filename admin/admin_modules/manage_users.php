@@ -133,26 +133,11 @@ if ($roles_result) {
     <!-- USERS TABLE -->
     <div class="tab-pane fade <?php echo $user_type === 'users' ? 'show active' : ''; ?>" id="users-content" role="tabpanel">
         <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
+            <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="card-title mb-0">System Users</h5>
-                <div class="d-flex gap-2 flex-wrap">
-                    <form method="GET" class="d-flex gap-2">
-                        <input type="hidden" name="page" value="manage_users">
-                        <input type="hidden" name="type" value="users">
-                        <input type="text" class="form-control form-control-sm" name="search" placeholder="Search by name, username, email, or phone..." value="<?php echo htmlspecialchars($search); ?>">
-                        <button type="submit" class="btn btn-primary btn-sm">
-                            <i class="bi bi-search"></i> Search
-                        </button>
-                        <?php if (!empty($search)): ?>
-                            <a href="admin.php?page=manage_users&type=users" class="btn btn-secondary btn-sm">
-                                <i class="bi bi-x"></i> Clear
-                            </a>
-                        <?php endif; ?>
-                    </form>
-                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addUserModal">
-                        <i class="bi bi-plus-circle"></i> Add User
-                    </button>
-                </div>
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                    <i class="bi bi-plus-circle"></i> Add User
+                </button>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -177,7 +162,7 @@ if ($roles_result) {
                                     <td><?php echo htmlspecialchars($user['username']); ?></td>
                                     <td><?php echo htmlspecialchars($user['email']); ?></td>
                                     <td>
-                                        <span class="badge bg-<?php echo $user['role_name'] === 'admin' ? 'danger' : ($user['role_name'] === 'doctor' ? 'primary' : 'info'); ?>">
+                                        <span class="badge">
                                             <?php echo htmlspecialchars($user['role_name'] ?? 'N/A'); ?>
                                         </span>
                                     </td>

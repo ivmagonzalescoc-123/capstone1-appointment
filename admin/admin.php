@@ -34,6 +34,58 @@ check_session(['admin']);
 
     <!-- Template Main CSS File -->
     <link href="../assets/css/main.css" rel="stylesheet">
+    
+    <style>
+        .sidebar-nav .nav-link:hover {
+            background-color: #0066ff !important;
+            color: white !important;
+            border-radius: 30px !important;
+        }
+
+        .sidebar-nav .nav-link.active {
+            background-color: #0066ff !important;
+            color: white !important;
+            border-radius: 30px !important;
+            box-shadow: 0 10px 25px rgba(0, 102, 255, 0.4) !important;
+            font-weight: 600 !important;
+        }
+    </style>
+    
+    <!-- Custom Sidebar Styles -->
+    <style>
+        .sidebar-nav .nav-link {
+            display: flex !important;
+            align-items: center !important;
+            padding: 12px 20px !important;
+            margin: 6px 10px !important;
+            color: #333 !important;
+            text-decoration: none !important;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+            border-left: none !important;
+            border-radius: 30px !important;
+            background-color: transparent !important;
+        }
+
+        .sidebar-nav .nav-link:hover {
+            background-color: #ffffff !important;
+            color: #0066ff !important;
+            border-left-color: transparent !important;
+            border-radius: 30px !important;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12) !important;
+            transform: translateY(-3px) !important;
+            padding: 12px 24px !important;
+        }
+
+        .sidebar-nav .nav-link.active {
+            background-color: #ffffff !important;
+            color: #0066ff !important;
+            border-left-color: transparent !important;
+            border-radius: 30px !important;
+            box-shadow: 0 10px 25px rgba(0, 102, 255, 0.2) !important;
+            padding: 12px 24px !important;
+            font-weight: 600 !important;
+        }
+    </style>
 </head>
 
 <body>

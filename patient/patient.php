@@ -34,6 +34,22 @@ check_session(['patient']);
 
     <!-- Template Main CSS File -->
     <link href="../assets/css/main.css" rel="stylesheet">
+    
+    <!-- Custom Sidebar Styles -->
+    <style>
+        .sidebar-nav .nav-link:hover {
+            background-color: #0066ff !important;
+            color: white !important;
+            border-radius: 30px !important;
+        }
+
+        .sidebar-nav .nav-link.active {
+            background-color: #0066ff !important;
+            color: white !important;
+            border-radius: 30px !important;
+            box-shadow: 0 10px 25px rgba(0, 102, 255, 0.4) !important;
+        }
+    </style>
 </head>
 
 <body>
