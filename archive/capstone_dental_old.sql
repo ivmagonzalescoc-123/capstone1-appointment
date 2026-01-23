@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 23, 2026 at 07:23 AM
+-- Generation Time: Jan 20, 2026 at 04:02 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -149,8 +149,7 @@ CREATE TABLE `patients` (
 --
 
 INSERT INTO `patients` (`patient_id`, `first_name`, `last_name`, `middle_name`, `username`, `password_hash`, `date_of_birth`, `gender`, `phone_number`, `email`, `address`, `created_at`, `added_by`) VALUES
-(1, 'John', 'Smith', 'Robert', 'patient1', 'patient123', '1990-05-15', 'Male', '5551234567', 'patient1@example.com', '321 Patient Road', '2026-01-20 22:57:04', NULL),
-(2, 'Paul Benjie', 'Gonzales', 'Maglupay', 'paulbgonzales', 'paul123', '1997-08-25', 'Male', '096546511564', 'paul@gmail.com', 'Zone 3 Agusan', '2026-01-20 23:18:27', NULL);
+(1, 'John', 'Smith', 'Robert', 'patient1', 'patient123', '1990-05-15', 'Male', '5551234567', 'patient1@example.com', '321 Patient Road', '2026-01-20 22:57:04', NULL);
 
 -- --------------------------------------------------------
 
@@ -655,7 +654,7 @@ ALTER TABLE `medical_history`
 -- AUTO_INCREMENT for table `patients`
 --
 ALTER TABLE `patients`
-  MODIFY `patient_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `patient_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `payment`
