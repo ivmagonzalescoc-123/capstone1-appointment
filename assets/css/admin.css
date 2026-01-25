@@ -213,19 +213,28 @@ body.toggle-sidebar .footer {
     padding: 12px 20px !important;
     color: var(--sidebar-text) !important;
     text-decoration: none;
-    transition: all 0.3s ease;
+    transition: background-color 0.2s ease, color 0.2s ease, border-left-color 0.2s ease;
     border-left: 4px solid transparent;
 }
 
-.sidebar-nav .nav-link:hover {
-    background-color: rgba(0, 102, 255, 0.1);
-    color: var(--primary-color) !important;
-    border-left-color: var(--primary-color);
+
+.sidebar-nav .nav-link:not(.active):hover,
+.sidebar-nav .nav-link:not(.active):focus {
+    background-color: rgba(0, 0, 0, 0.08);
+    color: var(--sidebar-text) !important;
+    border-left-color: transparent;
 }
 
 .sidebar-nav .nav-link.active {
     background-color: var(--primary-color);
-    color: white !important;
+    color: #fff !important;
+    border-left-color: var(--primary-color);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+}
+
+.sidebar-nav .nav-link:active {
+    background-color: rgba(0, 0, 0, 0.08);
+    color: var(--primary-color) !important;
     border-left-color: var(--primary-color);
 }
 

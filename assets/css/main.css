@@ -136,7 +136,7 @@ body {
 }
 
 .header-nav .nav-link:hover {
-    background-color: rgba(0, 102, 255, 0.1);
+    background-color: rgba(0, 0, 0, 0.08);
 }
 
 .header-nav .nav-link:active {
@@ -221,24 +221,31 @@ body.toggle-sidebar .footer {
     position: relative !important;
 }
 
-.sidebar-nav .nav-link:hover {
-    background-color: var(--primary-color) !important;
-    color: #ffffff !important;
+.sidebar-nav .nav-link:not(.active):hover,
+.sidebar-nav .nav-link:not(.active):focus {
+    background-color: rgba(0, 0, 0, 0.08) !important;
+    color: var(--sidebar-text) !important;
     border-left-color: transparent !important;
     border-radius: 30px !important;
-    box-shadow: 0 8px 20px rgba(0, 102, 255, 0.3) !important;
-    transform: translateY(-3px) !important;
-    padding: 12px 24px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+    padding: 12px 20px !important;
 }
 
 .sidebar-nav .nav-link.active {
     background-color: var(--primary-color) !important;
-    color: #ffffff !important;
+    color: #fff !important;
     border-left-color: transparent !important;
     border-radius: 30px !important;
-    box-shadow: 0 10px 25px rgba(0, 102, 255, 0.4) !important;
-    padding: 12px 24px !important;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18) !important;
+    padding: 12px 20px !important;
     font-weight: 600 !important;
+}
+
+.sidebar-nav .nav-link.active:hover,
+.sidebar-nav .nav-link.active:focus {
+    background-color: var(--primary-color) !important;
+    color: #fff !important;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18) !important;
 }
 
 .sidebar-nav .nav-link.collapsed {

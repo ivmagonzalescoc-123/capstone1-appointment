@@ -34,58 +34,6 @@ check_session(['admin']);
 
     <!-- Template Main CSS File -->
     <link href="../assets/css/main.css" rel="stylesheet">
-    
-    <style>
-        .sidebar-nav .nav-link:hover {
-            background-color: #0066ff !important;
-            color: white !important;
-            border-radius: 30px !important;
-        }
-
-        .sidebar-nav .nav-link.active {
-            background-color: #0066ff !important;
-            color: white !important;
-            border-radius: 30px !important;
-            box-shadow: 0 10px 25px rgba(0, 102, 255, 0.4) !important;
-            font-weight: 600 !important;
-        }
-    </style>
-    
-    <!-- Custom Sidebar Styles -->
-    <style>
-        .sidebar-nav .nav-link {
-            display: flex !important;
-            align-items: center !important;
-            padding: 12px 20px !important;
-            margin: 6px 10px !important;
-            color: #333 !important;
-            text-decoration: none !important;
-            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
-            border-left: none !important;
-            border-radius: 30px !important;
-            background-color: transparent !important;
-        }
-
-        .sidebar-nav .nav-link:hover {
-            background-color: #ffffff !important;
-            color: #0066ff !important;
-            border-left-color: transparent !important;
-            border-radius: 30px !important;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12) !important;
-            transform: translateY(-3px) !important;
-            padding: 12px 24px !important;
-        }
-
-        .sidebar-nav .nav-link.active {
-            background-color: #ffffff !important;
-            color: #0066ff !important;
-            border-left-color: transparent !important;
-            border-radius: 30px !important;
-            box-shadow: 0 10px 25px rgba(0, 102, 255, 0.2) !important;
-            padding: 12px 24px !important;
-            font-weight: 600 !important;
-        }
-    </style>
 </head>
 
 <body>
@@ -163,6 +111,12 @@ check_session(['admin']);
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link collapsed" href="admin.php?page=patients">
+                    <i class="bi bi-person-lines-fill"></i>
+                    <span>Patients Records</span>
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link collapsed" href="admin.php?page=manage_users">
                     <i class="bi bi-person"></i>
                     <span>Manage Users</span>
@@ -175,9 +129,27 @@ check_session(['admin']);
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link collapsed" href="admin.php?page=queue">
+                    <i class="bi bi-list-ol"></i>
+                    <span>On Queue</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="admin.php?page=services">
+                    <i class="bi bi-bag-heart"></i>
+                    <span>Services</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="admin.php?page=reports">
+                    <i class="bi bi-bar-chart-line"></i>
+                    <span>Reports</span>
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link collapsed" href="admin.php?page=system_logs">
                     <i class="bi bi-file-text"></i>
-                    <span>System Logs</span>
+                    <span>User Logs</span>
                 </a>
             </li>
 
@@ -205,11 +177,26 @@ check_session(['admin']);
                                 case "dashboard":
                                     include "admin_modules/dashboard.php";
                                     break;
+                                case "patients":
+                                    include "admin_modules/patients.php";
+                                    break;
                                 case "manage_users":
                                     include "admin_modules/manage_users.php";
                                     break;
                                 case "appointments":
                                     include "admin_modules/appointments.php";
+                                    break;
+                                case "queue":
+                                    include "admin_modules/queue.php";
+                                    break;
+                                case "services":
+                                    include "admin_modules/services.php";
+                                    break;
+                                case "reports":
+                                    include "admin_modules/reports.php";
+                                    break;
+                                case "system_logs":
+                                    include "admin_modules/system_logs.php";
                                     break;
                                 default:
                                     include "admin_modules/dashboard.php";

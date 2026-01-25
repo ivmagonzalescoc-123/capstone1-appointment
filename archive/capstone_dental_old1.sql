@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 25, 2026 at 03:44 AM
+-- Generation Time: Jan 25, 2026 at 02:05 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -49,8 +49,7 @@ CREATE TABLE `appointments` (
 INSERT INTO `appointments` (`appointment_id`, `appointment_date`, `reason`, `is_online_appointment`, `notes`, `status`, `created_at`, `timeslot_id`, `user_id`, `branch_id`, `rescheduled_from`, `patient_id`) VALUES
 (1, '2026-01-24', 'ouchy', 0, '', 'scheduled', '2026-01-23 16:03:40', 1, 1, NULL, NULL, 2),
 (4, '2026-01-24', '0', 1, 'Ambot', 'scheduled', '2026-01-23 16:26:53', 4, 1, 1, NULL, 1),
-(5, '2026-01-24', '0', 0, 'lala', 'scheduled', '2026-01-23 16:31:35', 5, 1, 1, NULL, 1),
-(6, '2026-01-26', 'Brace', 0, 'Nothing', 'scheduled', '2026-01-25 09:21:52', 77, 1, 1, NULL, 1);
+(5, '2026-01-24', '0', 0, 'lala', 'scheduled', '2026-01-23 16:31:35', 5, 1, 1, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -291,38 +290,20 @@ CREATE TABLE `selected_treatments` (
   `notes` text DEFAULT NULL,
   `created_at` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `services`
---
-
-CREATE TABLE `services` (
-  `service_id` int(11) NOT NULL,
-  `service_name` varchar(200) NOT NULL,
-  `initial_price` decimal(12,2) NOT NULL DEFAULT 0.00,
-  `description` text DEFAULT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `added_by` int(11) DEFAULT NULL,
-  `is_active` tinyint(1) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
 -- Dumping data for table `services`
 --
 
-INSERT INTO `services` (`service_id`, `service_name`, `initial_price`, `description`, `created_at`, `added_by`, `is_active`) VALUES
-(1, 'Teeth Cleaning', 500.00, 'Professional teeth cleaning and scaling', '2026-01-23 15:54:14', 1, 1),
-(2, 'Root Canal Treatment', 3000.00, 'Root canal therapy for damaged teeth', '2026-01-23 15:54:14', 1, 1),
-(3, 'Crown Placement', 5000.00, 'Dental crown installation', '2026-01-23 15:54:14', 1, 1),
-(4, 'Filling', 800.00, 'Tooth filling for cavities', '2026-01-23 15:54:14', 1, 1),
-(5, 'Extraction', 1500.00, 'Tooth extraction', '2026-01-23 15:54:14', 1, 1),
-(6, 'Whitening', 2000.00, 'Professional teeth whitening', '2026-01-23 15:54:14', 1, 1),
-(7, 'Orthodontic Consultation', 1000.00, 'Braces and alignment consultation', '2026-01-23 15:54:14', 1, 1),
-(8, 'Denture Fitting', 4000.00, 'Partial or complete denture fitting', '2026-01-23 15:54:14', 1, 1),
-(9, 'Implant Consultation', 2000.00, 'Dental implant consultation and planning', '2026-01-23 15:54:14', 1, 1),
-(10, 'Periodic Checkup', 300.00, 'Regular dental examination', '2026-01-23 15:54:14', 1, 1);
+INSERT INTO `services` (`service_id`, `service_name`, `initial_price`, `description`, `created_at`, `added_by`) VALUES
+(1, 'Teeth Cleaning', 500.00, 'Professional teeth cleaning and scaling', '2026-01-23 15:54:14', 1),
+(2, 'Root Canal Treatment', 3000.00, 'Root canal therapy for damaged teeth', '2026-01-23 15:54:14', 1),
+(3, 'Crown Placement', 5000.00, 'Dental crown installation', '2026-01-23 15:54:14', 1),
+(4, 'Filling', 800.00, 'Tooth filling for cavities', '2026-01-23 15:54:14', 1),
+(5, 'Extraction', 1500.00, 'Tooth extraction', '2026-01-23 15:54:14', 1),
+(6, 'Whitening', 2000.00, 'Professional teeth whitening', '2026-01-23 15:54:14', 1),
+(7, 'Orthodontic Consultation', 1000.00, 'Braces and alignment consultation', '2026-01-23 15:54:14', 1),
+(8, 'Denture Fitting', 4000.00, 'Partial or complete denture fitting', '2026-01-23 15:54:14', 1),
+(9, 'Implant Consultation', 2000.00, 'Dental implant consultation and planning', '2026-01-23 15:54:14', 1),
+(10, 'Periodic Checkup', 300.00, 'Regular dental examination', '2026-01-23 15:54:14', 1);
 
 -- --------------------------------------------------------
 
@@ -439,27 +420,7 @@ INSERT INTO `timeslot` (`timeslot_id`, `start_time`, `end_time`, `status`) VALUE
 (69, '2026-01-31 14:00:00', '2026-01-31 14:30:00', 'available'),
 (70, '2026-01-31 14:30:00', '2026-01-31 15:00:00', 'available'),
 (71, '2026-01-31 15:00:00', '2026-01-31 15:30:00', 'available'),
-(72, '2026-01-31 15:30:00', '2026-01-31 16:00:00', 'available'),
-(73, '2026-01-27 12:00:00', '2026-01-27 12:30:00', 'available'),
-(74, '2026-01-27 12:30:00', '2026-01-27 13:00:00', 'available'),
-(75, '2026-01-27 16:00:00', '2026-01-27 16:30:00', 'available'),
-(76, '2026-01-27 16:30:00', '2026-01-27 17:00:00', 'available'),
-(77, '2026-01-26 09:00:00', '2026-01-26 09:30:00', 'booked'),
-(78, '2026-01-26 09:30:00', '2026-01-26 10:00:00', 'available'),
-(79, '2026-01-26 10:00:00', '2026-01-26 10:30:00', 'available'),
-(80, '2026-01-26 10:30:00', '2026-01-26 11:00:00', 'available'),
-(81, '2026-01-26 11:00:00', '2026-01-26 11:30:00', 'available'),
-(82, '2026-01-26 11:30:00', '2026-01-26 12:00:00', 'available'),
-(83, '2026-01-26 12:00:00', '2026-01-26 12:30:00', 'available'),
-(84, '2026-01-26 12:30:00', '2026-01-26 13:00:00', 'available'),
-(85, '2026-01-26 13:00:00', '2026-01-26 13:30:00', 'available'),
-(86, '2026-01-26 13:30:00', '2026-01-26 14:00:00', 'available'),
-(87, '2026-01-26 14:00:00', '2026-01-26 14:30:00', 'available'),
-(88, '2026-01-26 14:30:00', '2026-01-26 15:00:00', 'available'),
-(89, '2026-01-26 15:00:00', '2026-01-26 15:30:00', 'available'),
-(90, '2026-01-26 15:30:00', '2026-01-26 16:00:00', 'available'),
-(91, '2026-01-26 16:00:00', '2026-01-26 16:30:00', 'available'),
-(92, '2026-01-26 16:30:00', '2026-01-26 17:00:00', 'available');
+(72, '2026-01-31 15:30:00', '2026-01-31 16:00:00', 'available');
 
 -- --------------------------------------------------------
 
@@ -855,7 +816,7 @@ ALTER TABLE `user_logs`
 -- AUTO_INCREMENT for table `appointments`
 --
 ALTER TABLE `appointments`
-  MODIFY `appointment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `appointment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `backup`
@@ -945,7 +906,7 @@ ALTER TABLE `specialization`
 -- AUTO_INCREMENT for table `timeslot`
 --
 ALTER TABLE `timeslot`
-  MODIFY `timeslot_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
+  MODIFY `timeslot_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
 
 --
 -- AUTO_INCREMENT for table `tooth`

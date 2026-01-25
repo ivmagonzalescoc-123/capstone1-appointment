@@ -97,7 +97,6 @@ if ($roles_result) {
 }
 ?>
 
-    <h1>Manage Users</h1>
  
 
 <!-- Alert Messages -->
@@ -202,7 +201,7 @@ if ($roles_result) {
     <div class="tab-pane fade <?php echo $user_type === 'patients' ? 'show active' : ''; ?>" id="patients-content" role="tabpanel">
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
-                <h5 class="card-title mb-0">Patient Records</h5>
+                <h5 class="card-title mb-0">Patient Settings </h5>
                 <div class="d-flex gap-2 flex-wrap">
                     <form method="GET" class="d-flex gap-2">
                         <input type="hidden" name="page" value="manage_users">

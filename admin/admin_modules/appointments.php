@@ -2,17 +2,176 @@
 include dirname(dirname(__DIR__)) . '/config/database.php';
 
 $action = $_GET['action'] ?? '';
+$view = $_GET['view'] ?? 'all'; // 'all' | 'today'
 $search = $_GET['search'] ?? '';
+
+$today = date('Y-m-d');
+if ($view !== 'all' && $view !== 'today') {
+    $view = 'all';
+}
+
+// Handle CHECK-IN (accept) for today's appointment
+if ($action === 'checkin' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $appointmentId = (int)($_POST['appointment_id'] ?? 0);
+
+    if ($appointmentId <= 0) {
+        $_SESSION['message'] = 'Invalid appointment.';
+        $_SESSION['message_type'] = 'warning';
+        header('Location: admin.php?page=appointments&view=' . urlencode($view));
+        exit;
+    }
+
+    $conn->begin_transaction();
+    try {
+        // Verify appointment exists and is for today
+        $stmt = $conn->prepare('SELECT appointment_date, status FROM appointments WHERE appointment_id = ?');
+        if (!$stmt) {
+            throw new Exception('Error preparing appointment lookup.');
+        }
+        $stmt->bind_param('i', $appointmentId);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        $appt = $res ? $res->fetch_assoc() : null;
+        $stmt->close();
+
+        if (!$appt) {
+            throw new Exception('Appointment not found.');
+        }
+
+        if (($appt['appointment_date'] ?? '') !== $today) {
+            throw new Exception('You can only check-in appointments scheduled for today.');
+        }
+
+        // Already checked-in?
+        $stmt = $conn->prepare('SELECT checkin_id FROM check_in_queue WHERE appointment_id = ?');
+        if (!$stmt) {
+            throw new Exception('Error preparing check-in lookup.');
+        }
+        $stmt->bind_param('i', $appointmentId);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        $existing = $res ? $res->fetch_assoc() : null;
+        $stmt->close();
+
+        if ($existing && !empty($existing['checkin_id'])) {
+            $_SESSION['message'] = 'This appointment is already checked-in.';
+            $_SESSION['message_type'] = 'info';
+            $conn->commit();
+            header('Location: admin.php?page=appointments&view=' . urlencode($view));
+            exit;
+        }
+
+        // Next queue number for today
+        $nextQueueNo = 1;
+        $stmt = $conn->prepare('SELECT COALESCE(MAX(que_number), 0) + 1 AS next_no FROM check_in_queue WHERE DATE(checkin_time) = ?');
+        if ($stmt) {
+            $stmt->bind_param('s', $today);
+            $stmt->execute();
+            $res = $stmt->get_result();
+            if ($res && ($row = $res->fetch_assoc())) {
+                $nextQueueNo = (int)($row['next_no'] ?? 1);
+                if ($nextQueueNo <= 0) $nextQueueNo = 1;
+            }
+            $stmt->close();
+        }
+
+        $status = 'waiting';
+        $stmt = $conn->prepare('INSERT INTO check_in_queue (status, que_number, appointment_id) VALUES (?, ?, ?)');
+        if (!$stmt) {
+            throw new Exception('Error preparing check-in insert.');
+        }
+        $stmt->bind_param('sii', $status, $nextQueueNo, $appointmentId);
+        if (!$stmt->execute()) {
+            throw new Exception('Error creating check-in record: ' . $stmt->error);
+        }
+        $stmt->close();
+
+        // Keep appointment status in sync
+        $newApptStatus = 'checked_in';
+        $stmt = $conn->prepare('UPDATE appointments SET status = ? WHERE appointment_id = ?');
+        if ($stmt) {
+            $stmt->bind_param('si', $newApptStatus, $appointmentId);
+            $stmt->execute();
+            $stmt->close();
+        }
+
+        $conn->commit();
+
+        $_SESSION['message'] = 'Patient accepted and checked-in (Queue #' . $nextQueueNo . ').';
+        $_SESSION['message_type'] = 'success';
+    } catch (Throwable $e) {
+        $conn->rollback();
+        $_SESSION['message'] = $e->getMessage();
+        $_SESSION['message_type'] = 'danger';
+    }
+
+    header('Location: admin.php?page=appointments&view=' . urlencode($view));
+    exit;
+}
+
+// Counts for tabs
+$totalCount = 0;
+$todayCount = 0;
+
+$countResult = $conn->query('SELECT COUNT(*) AS c FROM appointments');
+if ($countResult && ($r = $countResult->fetch_assoc())) {
+    $totalCount = (int)($r['c'] ?? 0);
+}
+
+$stmt = $conn->prepare('SELECT COUNT(*) AS c FROM appointments WHERE appointment_date = ?');
+if ($stmt) {
+    $stmt->bind_param('s', $today);
+    $stmt->execute();
+    $res = $stmt->get_result();
+    if ($res && ($r = $res->fetch_assoc())) {
+        $todayCount = (int)($r['c'] ?? 0);
+    }
+    $stmt->close();
+}
 
 // Fetch appointments
 $appointments = [];
-$appointments_sql = "SELECT a.*, p.first_name, p.last_name, p.email, p.phone_number FROM appointments a 
-                     LEFT JOIN patients p ON a.patient_id = p.patient_id 
-                     ORDER BY a.appointment_date DESC, a.created_at DESC";
-$appointments_result = $conn->query($appointments_sql);
-if ($appointments_result) {
-    while ($row = $appointments_result->fetch_assoc()) {
-        $appointments[] = $row;
+$appointments_sql = "
+    SELECT
+        a.*,
+        p.first_name,
+        p.last_name,
+        p.email,
+        p.phone_number,
+        q.checkin_id,
+        q.status AS queue_status,
+        q.checkin_time,
+        q.que_number
+    FROM appointments a
+    LEFT JOIN patients p ON a.patient_id = p.patient_id
+    LEFT JOIN check_in_queue q ON q.appointment_id = a.appointment_id
+";
+
+if ($view === 'today') {
+    $appointments_sql .= " WHERE a.appointment_date = ? ";
+}
+
+$appointments_sql .= " ORDER BY a.appointment_date DESC, a.created_at DESC";
+
+if ($view === 'today') {
+    $stmt = $conn->prepare($appointments_sql);
+    if ($stmt) {
+        $stmt->bind_param('s', $today);
+        $stmt->execute();
+        $appointments_result = $stmt->get_result();
+        if ($appointments_result) {
+            while ($row = $appointments_result->fetch_assoc()) {
+                $appointments[] = $row;
+            }
+        }
+        $stmt->close();
+    }
+} else {
+    $appointments_result = $conn->query($appointments_sql);
+    if ($appointments_result) {
+        while ($row = $appointments_result->fetch_assoc()) {
+            $appointments[] = $row;
+        }
     }
 }
 
@@ -27,9 +186,6 @@ if ($patients_result) {
 }
 ?>
 
-<div class="pagetitle">
-    <h1>Manage Appointments</h1>
-</div>
 
 <!-- Alert Messages -->
 <?php if (isset($_SESSION['message'])): ?>
@@ -40,10 +196,28 @@ if ($patients_result) {
     <?php unset($_SESSION['message']); unset($_SESSION['message_type']); ?>
 <?php endif; ?>
 
+<!-- Tab Navigation (All vs Today) -->
+<div class="mb-3">
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link <?php echo $view === 'all' ? 'active' : ''; ?>" type="button"
+                    onclick="window.location.href='admin.php?page=appointments&view=all'">
+                <i class="bi bi-calendar3"></i> All Appointments (<?php echo (int)$totalCount; ?>)
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link <?php echo $view === 'today' ? 'active' : ''; ?>" type="button"
+                    onclick="window.location.href='admin.php?page=appointments&view=today'">
+                <i class="bi bi-calendar-check"></i> Today (<?php echo (int)$todayCount; ?>)
+            </button>
+        </li>
+    </ul>
+</div>
+
 <!-- Appointments List -->
 <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
-        <h5 class="card-title mb-0">Appointments</h5>
+        <h2 class="card-title mb-0">Appointments</h2>
         <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#createAppointmentModal">
             <i class="bi bi-plus-circle"></i> Create Appointment
         </button>
@@ -67,6 +241,10 @@ if ($patients_result) {
                 </thead>
                 <tbody>
                     <?php foreach ($appointments as $appointment): ?>
+                        <?php
+                            $isTodayAppt = (($appointment['appointment_date'] ?? '') === $today);
+                            $alreadyCheckedIn = !empty($appointment['checkin_id']);
+                        ?>
                         <tr>
                             <td><?php echo htmlspecialchars($appointment['appointment_id']); ?></td>
                             <td><?php echo htmlspecialchars($appointment['first_name'] . ' ' . $appointment['last_name']); ?></td>
@@ -97,6 +275,22 @@ if ($patients_result) {
                                         data-bs-target="#editAppointmentModal" onclick="editAppointment(<?php echo htmlspecialchars(json_encode($appointment)); ?>)">
                                     <i class="bi bi-pencil"></i> Edit
                                 </button>
+
+                                <?php if ($isTodayAppt): ?>
+                                    <?php if ($alreadyCheckedIn): ?>
+                                        <button type="button" class="btn btn-sm btn-success" disabled>
+                                            <i class="bi bi-check2-circle"></i>
+                                            Checked-in<?php echo !empty($appointment['que_number']) ? ' #' . htmlspecialchars((string)$appointment['que_number']) : ''; ?>
+                                        </button>
+                                    <?php else: ?>
+                                        <form method="POST" action="admin.php?page=appointments&view=<?php echo htmlspecialchars($view); ?>&action=checkin" style="display:inline-block;" onsubmit="return confirm('Accept and check-in this patient?');">
+                                            <input type="hidden" name="appointment_id" value="<?php echo htmlspecialchars($appointment['appointment_id']); ?>">
+                                            <button type="submit" class="btn btn-sm btn-primary">
+                                                <i class="bi bi-person-check"></i> Accept (Check-in)
+                                            </button>
+                                        </form>
+                                    <?php endif; ?>
+                                <?php endif; ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -293,19 +487,31 @@ function createAppointment() {
         method: 'POST',
         body: formData
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            messageDiv.innerHTML = '<div class="alert alert-success">Appointment created successfully!</div>';
-            setTimeout(() => {
-                location.reload();
-            }, 1500);
-        } else {
-            messageDiv.innerHTML = '<div class="alert alert-danger">' + data.message + '</div>';
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.text();
+    })
+    .then(text => {
+        try {
+            const data = JSON.parse(text);
+            if (data.success) {
+                messageDiv.innerHTML = '<div class="alert alert-success">Appointment created successfully!</div>';
+                setTimeout(() => {
+                    location.reload();
+                }, 1500);
+            } else {
+                messageDiv.innerHTML = '<div class="alert alert-danger">' + data.message + '</div>';
+            }
+        } catch (e) {
+            messageDiv.innerHTML = '<div class="alert alert-danger">Server Error: ' + text.substring(0, 200) + '</div>';
+            console.error('JSON Parse Error:', e);
+            console.error('Response:', text);
         }
     })
     .catch(error => {
-        messageDiv.innerHTML = '<div class="alert alert-danger">Error: ' + error + '</div>';
+        messageDiv.innerHTML = '<div class="alert alert-danger">Error: ' + error.message + '</div>';
         console.error('Error:', error);
     });
 }
@@ -313,16 +519,24 @@ function createAppointment() {
 // Load timeslots when date changes
 const appointmentDate = document.getElementById('appointmentDate');
 const timeslotSelect = document.getElementById('timeslotSelect');
+const branchSelect = document.getElementById('branchSelect');
 
 appointmentDate.addEventListener('change', function() {
     const selectedDate = this.value;
+    const selectedBranch = branchSelect.value;
+    
     if (!selectedDate) {
         timeslotSelect.innerHTML = '<option value="">-- Select a date first --</option>';
         return;
     }
+    
+    if (!selectedBranch) {
+        timeslotSelect.innerHTML = '<option value="">-- Select a branch first --</option>';
+        return;
+    }
 
-    // Fetch available timeslots for the selected date
-    fetch('../assets/api/appointments/get_timeslots.php?date=' + selectedDate)
+    // Fetch available timeslots for the selected date and branch
+    fetch('../assets/api/appointments/get_timeslots.php?date=' + selectedDate + '&branch_id=' + selectedBranch)
         .then(response => response.json())
         .then(data => {
             console.log('Timeslots loaded:', data);
