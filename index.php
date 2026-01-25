@@ -119,12 +119,6 @@ if (isset($_SESSION['user_id']) || isset($_SESSION['patient_id'])) {
                             <div class="carousel-slide">
                                 <img src="assets/img/tooth3.png" alt="Clinic">
                             </div>
-                            <div class="carousel-slide">
-                                <img src="assets/img/tooth2.png" alt="Clinic">
-                            </div>
-                            <div class="carousel-slide">
-                                <img src="assets/img/clinic3.png" alt="Clinic 3">
-                            </div>
                         </div>
                         <button class="carousel-btn prev" onclick="prevSlide()">
                             <i class="bi bi-chevron-left"></i>
@@ -136,8 +130,6 @@ if (isset($_SESSION['user_id']) || isset($_SESSION['patient_id'])) {
                             <span class="dot active" onclick="currentSlide(0)"></span>
                             <span class="dot" onclick="currentSlide(1)"></span>
                             <span class="dot" onclick="currentSlide(2)"></span>
-                            <span class="dot" onclick="currentSlide(3)"></span>
-                            <span class="dot" onclick="currentSlide(4)"></span>
                         </div>
                     </div>
                 </div>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 25, 2026 at 08:46 AM
+-- Generation Time: Jan 25, 2026 at 03:44 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -50,8 +50,7 @@ INSERT INTO `appointments` (`appointment_id`, `appointment_date`, `reason`, `is_
 (1, '2026-01-24', 'ouchy', 0, '', 'scheduled', '2026-01-23 16:03:40', 1, 1, NULL, NULL, 2),
 (4, '2026-01-24', '0', 1, 'Ambot', 'scheduled', '2026-01-23 16:26:53', 4, 1, 1, NULL, 1),
 (5, '2026-01-24', '0', 0, 'lala', 'scheduled', '2026-01-23 16:31:35', 5, 1, 1, NULL, 1),
-(6, '2026-01-26', 'Brace', 0, 'Nothing', 'scheduled', '2026-01-25 09:21:52', 77, 1, 1, NULL, 1),
-(7, '2026-01-25', 'Pasta', 1, 'Goodjob', 'completed', '2026-01-25 15:02:21', 78, 2, 1, NULL, 1);
+(6, '2026-01-26', 'Brace', 0, 'Nothing', 'scheduled', '2026-01-25 09:21:52', 77, 1, 1, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -83,13 +82,6 @@ CREATE TABLE `billing` (
   `status` enum('unpaid','partial','paid','refunded','void') DEFAULT 'unpaid',
   `processed_by` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `billing`
---
-
-INSERT INTO `billing` (`billing_id`, `appointment_id`, `user_id`, `total_amount`, `created_at`, `status`, `processed_by`) VALUES
-(1, 7, 1, 2000.00, '2026-01-25 15:23:03', 'paid', 3);
 
 -- --------------------------------------------------------
 
@@ -133,13 +125,6 @@ CREATE TABLE `check_in_queue` (
   `served_time` datetime DEFAULT NULL,
   `completed_time` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `check_in_queue`
---
-
-INSERT INTO `check_in_queue` (`checkin_id`, `status`, `checkin_time`, `que_number`, `appointment_id`, `served_time`, `completed_time`) VALUES
-(1, 'served', '2026-01-25 15:11:51', 1, 7, '2026-01-25 15:23:03', '2026-01-25 15:23:03');
 
 -- --------------------------------------------------------
 
@@ -201,13 +186,6 @@ CREATE TABLE `payment` (
   `reference_no` varchar(200) DEFAULT NULL,
   `remarks` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `payment`
---
-
-INSERT INTO `payment` (`payment_id`, `billing_id`, `payment_method`, `payment_date`, `amount_paid`, `reference_no`, `remarks`) VALUES
-(1, 1, 'GCash', '0000-00-00', 2000.00, 'RCP-20260125-074148-00001', 'Paid');
 
 -- --------------------------------------------------------
 
@@ -467,7 +445,7 @@ INSERT INTO `timeslot` (`timeslot_id`, `start_time`, `end_time`, `status`) VALUE
 (75, '2026-01-27 16:00:00', '2026-01-27 16:30:00', 'available'),
 (76, '2026-01-27 16:30:00', '2026-01-27 17:00:00', 'available'),
 (77, '2026-01-26 09:00:00', '2026-01-26 09:30:00', 'booked'),
-(78, '2026-01-26 09:30:00', '2026-01-26 10:00:00', 'booked'),
+(78, '2026-01-26 09:30:00', '2026-01-26 10:00:00', 'available'),
 (79, '2026-01-26 10:00:00', '2026-01-26 10:30:00', 'available'),
 (80, '2026-01-26 10:30:00', '2026-01-26 11:00:00', 'available'),
 (81, '2026-01-26 11:00:00', '2026-01-26 11:30:00', 'available'),
@@ -650,7 +628,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `first_name`, `last_name`, `middle_name`, `username`, `password_hash`, `date_of_birth`, `gender`, `phone_number`, `email`, `address`, `is_active`, `created_at`, `specialization_id`, `role_id`, `added_by`) VALUES
-(1, 'Admin', 'User', 'Admin', 'admin', 'admin123', '1980-01-15', 'Male', '1234567890', 'admin@dentalclinic.com', '123 Admin Street', 1, '2026-01-20 22:57:04', NULL, 1, NULL),
+(1, 'Admin', 'User', NULL, 'admin', 'admin123', '1980-01-15', 'Male', '1234567890', 'admin@dentalclinic.com', '123 Admin Street', 1, '2026-01-20 22:57:04', NULL, 1, NULL),
 (2, 'Dr. John', 'Dentist', 'Michael', 'doctor', 'doctor123', '1985-05-20', 'Male', '0987654321', 'doctor@dentalclinic.com', '456 Doctor Avenue', 1, '2026-01-20 22:57:04', NULL, 2, NULL),
 (3, 'Mary', 'Secretary', 'Jane', 'secretary', 'secretary123', '1990-08-10', 'Female', '1112223333', 'secretary@dentalclinic.com', '789 Secretary Lane', 1, '2026-01-20 22:57:04', NULL, 3, NULL);
 
@@ -877,7 +855,7 @@ ALTER TABLE `user_logs`
 -- AUTO_INCREMENT for table `appointments`
 --
 ALTER TABLE `appointments`
-  MODIFY `appointment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `appointment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `backup`
@@ -889,7 +867,7 @@ ALTER TABLE `backup`
 -- AUTO_INCREMENT for table `billing`
 --
 ALTER TABLE `billing`
-  MODIFY `billing_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `billing_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `branch`
@@ -901,7 +879,7 @@ ALTER TABLE `branch`
 -- AUTO_INCREMENT for table `check_in_queue`
 --
 ALTER TABLE `check_in_queue`
-  MODIFY `checkin_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `checkin_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `medical_history`
@@ -919,7 +897,7 @@ ALTER TABLE `patients`
 -- AUTO_INCREMENT for table `payment`
 --
 ALTER TABLE `payment`
-  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `prescriptions`

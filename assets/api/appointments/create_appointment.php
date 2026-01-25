@@ -17,14 +17,14 @@ try {
     $patient_id = isset($_POST['patient_id']) ? (int)$_POST['patient_id'] : 0;
     $timeslot_id = isset($_POST['timeslot_id']) ? (int)$_POST['timeslot_id'] : 0;
     $branch_id = isset($_POST['branch_id']) ? (int)$_POST['branch_id'] : 0;
+    $user_id = isset($_POST['user_id']) ? (int)$_POST['user_id'] : 0;
     $reason = isset($_POST['reason']) ? trim($_POST['reason']) : '';
     $is_online_appointment = isset($_POST['is_online_appointment']) ? (int)$_POST['is_online_appointment'] : 0;
     $notes = isset($_POST['notes']) ? trim($_POST['notes']) : '';
     $status = isset($_POST['status']) ? trim($_POST['status']) : 'scheduled';
-    $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : NULL;
 
-    if (empty($patient_id) || empty($timeslot_id) || empty($branch_id)) {
-        echo json_encode(['success' => false, 'message' => 'Patient, branch, and timeslot are required!']);
+    if (empty($patient_id) || empty($timeslot_id) || empty($branch_id) || empty($user_id)) {
+        echo json_encode(['success' => false, 'message' => 'Patient, doctor, branch, and timeslot are required!']);
         exit;
     }
 

@@ -1,8 +1,20 @@
 <?php
 include '../config/session_check.php';
 check_session(['doctor']);
-?>
 
+// Handle page logic for modules that need to send headers (before any output)
+$page = isset($_GET['page']) && $_GET['page'] !== '' ? $_GET['page'] : 'dashboard';
+
+// Process appointments module logic before HTML output
+if ($page === 'appointments') {
+    // Only run the PHP logic that might send headers
+    $action = $_GET['action'] ?? '';
+    if ($action && $_SERVER['REQUEST_METHOD'] === 'POST') {
+        include 'doctor_modules/appointments.php';
+        exit;
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -110,22 +122,11 @@ check_session(['doctor']);
                     <span>Dashboard</span>
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="doctor.php?page=manage_users">
-                    <i class="bi bi-person"></i>
-                    <span>Manage Users</span>
-                </a>
-            </li>
+            
             <li class="nav-item">
                 <a class="nav-link collapsed" href="doctor.php?page=appointments">
                     <i class="bi bi-calendar2-week"></i>
                     <span>Appointments</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="doctor.php?page=system_logs">
-                    <i class="bi bi-file-text"></i>
-                    <span>System Logs</span>
                 </a>
             </li>
 
@@ -153,9 +154,7 @@ check_session(['doctor']);
                                 case "dashboard":
                                     include "doctor_modules/dashboard.php";
                                     break;
-                                case "manage_users":
-                                    include "doctor_modules/manage_users.php";
-                                    break;
+                            
                                 case "appointments":
                                     include "doctor_modules/appointments.php";
                                     break;

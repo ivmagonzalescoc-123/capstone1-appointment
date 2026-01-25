@@ -1,6 +1,16 @@
 <?php
 include '../config/session_check.php';
 check_session(['secretary']);
+
+// Handle AJAX API requests before HTML output
+$page = $_GET['page'] ?? '';
+$action = $_GET['action'] ?? '';
+
+if ($page === 'billing' && $action === 'record_payment' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    header('Content-Type: application/json');
+    include 'secretary_modules/billing.php';
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -123,6 +133,12 @@ check_session(['secretary']);
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link collapsed" href="secretary.php?page=billing">
+                    <i class="bi bi-receipt"></i>
+                    <span>Billing</span>
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link collapsed" href="secretary.php?page=system_logs">
                     <i class="bi bi-file-text"></i>
                     <span>System Logs</span>
@@ -158,6 +174,9 @@ check_session(['secretary']);
                                     break;
                                 case "appointments":
                                     include "secretary_modules/appointments.php";
+                                    break;
+                                case "billing":
+                                    include "secretary_modules/billing.php";
                                     break;
                                 default:
                                     include "secretary_modules/dashboard.php";

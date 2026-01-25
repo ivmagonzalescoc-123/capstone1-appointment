@@ -138,12 +138,15 @@ $appointments_sql = "
         p.last_name,
         p.email,
         p.phone_number,
+        u.first_name as doctor_first_name,
+        u.last_name as doctor_last_name,
         q.checkin_id,
         q.status AS queue_status,
         q.checkin_time,
         q.que_number
     FROM appointments a
     LEFT JOIN patients p ON a.patient_id = p.patient_id
+    LEFT JOIN users u ON a.user_id = u.user_id
     LEFT JOIN check_in_queue q ON q.appointment_id = a.appointment_id
 ";
 
@@ -182,6 +185,16 @@ $patients_result = $conn->query($patients_sql);
 if ($patients_result) {
     while ($row = $patients_result->fetch_assoc()) {
         $patients_list[] = $row;
+    }
+}
+
+// Fetch doctors for dropdown
+$doctors_list = [];
+$doctors_sql = "SELECT user_id, first_name, last_name FROM users WHERE role_id = 2 AND is_active = 1 ORDER BY first_name ASC";
+$doctors_result = $conn->query($doctors_sql);
+if ($doctors_result) {
+    while ($row = $doctors_result->fetch_assoc()) {
+        $doctors_list[] = $row;
     }
 }
 ?>
@@ -229,6 +242,7 @@ if ($patients_result) {
                     <tr>
                         <th>ID</th>
                         <th>Patient Name</th>
+                        <th>Doctor</th>
                         <th>Branch</th>
                         <th>Email</th>
                         <th>Phone</th>
@@ -248,6 +262,7 @@ if ($patients_result) {
                         <tr>
                             <td><?php echo htmlspecialchars($appointment['appointment_id']); ?></td>
                             <td><?php echo htmlspecialchars($appointment['first_name'] . ' ' . $appointment['last_name']); ?></td>
+                            <td><?php echo htmlspecialchars(($appointment['doctor_first_name'] ?? 'N/A') . ' ' . ($appointment['doctor_last_name'] ?? '')); ?></td>
                             <td>
                                 <?php 
                                     $branches = [1 => 'Main', 2 => 'Butuan', 3 => 'Surigao'];
@@ -331,6 +346,18 @@ if ($patients_result) {
                     </div>
 
                     <div class="mb-3">
+                        <label class="form-label">Select Doctor</label>
+                        <select class="form-control" name="user_id" id="doctorSelect" required>
+                            <option value="">-- Select a doctor --</option>
+                            <?php foreach ($doctors_list as $doctor): ?>
+                                <option value="<?php echo htmlspecialchars($doctor['user_id']); ?>">
+                                    <?php echo htmlspecialchars($doctor['first_name'] . ' ' . $doctor['last_name']); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
                         <label class="form-label">Select Branch</label>
                         <select class="form-control" name="branch_id" id="branchSelect" required>
                             <option value="">-- Select a branch --</option>
@@ -410,6 +437,18 @@ if ($patients_result) {
                         <input type="text" class="form-control" id="editPatientDisplay" readonly>
                     </div>
 
+                    <div class="mb-3">
+                        <label class="form-label">Select Doctor</label>
+                        <select class="form-control" name="user_id" id="editDoctorSelect" required>
+                            <option value="">-- Select a doctor --</option>
+                            <?php foreach ($doctors_list as $doctor): ?>
+                                <option value="<?php echo htmlspecialchars($doctor['user_id']); ?>">
+                                    <?php echo htmlspecialchars($doctor['first_name'] . ' ' . $doctor['last_name']); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label class="form-label">Appointment Date</label>
@@ -463,14 +502,15 @@ function createAppointment() {
     const patientId = document.getElementById('selectedPatientId').value;
     const timeslotId = document.getElementById('timeslotSelect').value;
     const branchId = document.getElementById('branchSelect').value;
+    const doctorId = document.getElementById('doctorSelect').value;
     const reason = document.getElementById('appointmentReason').value;
     const isOnline = document.getElementById('appointmentType').value;
     const status = document.getElementById('appointmentStatus').value;
     const notes = document.getElementById('appointmentNotes').value;
     const messageDiv = document.getElementById('appointmentMessage');
 
-    if (!patientId || !timeslotId || !branchId) {
-        messageDiv.innerHTML = '<div class="alert alert-danger">Please select a patient, branch, and time slot!</div>';
+    if (!patientId || !timeslotId || !branchId || !doctorId) {
+        messageDiv.innerHTML = '<div class="alert alert-danger">Please select a patient, doctor, branch, and time slot!</div>';
         return;
     }
 
@@ -478,6 +518,7 @@ function createAppointment() {
     formData.append('patient_id', patientId);
     formData.append('timeslot_id', timeslotId);
     formData.append('branch_id', branchId);
+    formData.append('user_id', doctorId);
     formData.append('reason', reason);
     formData.append('is_online_appointment', isOnline);
     formData.append('status', status);
@@ -620,6 +661,7 @@ document.addEventListener('click', function(event) {
 function editAppointment(appointment) {
     document.getElementById('editAppointmentId').value = appointment.appointment_id;
     document.getElementById('editPatientDisplay').value = appointment.first_name + ' ' + appointment.last_name;
+    document.getElementById('editDoctorSelect').value = appointment.user_id;
     document.getElementById('editAppointmentDate').value = appointment.appointment_date;
     document.getElementById('editAppointmentType').value = appointment.is_online_appointment;
     document.getElementById('editAppointmentReason').value = appointment.reason;
