@@ -20,7 +20,7 @@ check_session(['patient']);
     <!-- Google Fonts -->
     <link href="https://fonts.gstatic.com" rel="preconnect">
     <link
-        href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+        href="https://fonts.googleapis.com/css?family=Mothwing:300,300i,400,400i,600,600i,700,700i"
         rel="stylesheet">
 
     <!-- Vendor CSS Files -->
@@ -51,7 +51,7 @@ check_session(['patient']);
         </div>
 
         <div class="header-search">
-            <input type="text" placeholder="Search..." class="search-input">
+            <input type="text" placeholder="Search..." class="search-input" id="patientSearch" name="search">
             <button class="search-btn">Search</button>
         </div>
 
@@ -63,40 +63,17 @@ check_session(['patient']);
                     </a>
                 </li>
 
-                <li class="nav-item dropdown">
-                    <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-                        <i class="bi bi-bell"></i>
-                        <span class="badge bg-primary badge-number">4</span>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
-                        <li class="dropdown-header">
-                            You have 4 new notifications
-                            <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
-                        </li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li class="dropdown-footer">
-                            <a href="#">Show all notifications</a>
-                        </li>
-                    </ul>
-                </li>
+                
 
                 <li class="nav-item dropdown pe-3">
                     <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                        <img src="../assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
-                        <span class="d-none d-md-block dropdown-toggle ps-2">Patient</span>
+                        <img src="../assets/img/profile.png" alt="Profile" class="rounded-circle">
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-                        <li class="dropdown-header">
-                            <span>System Administrator</span>
-                        </li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
+                
                         <li>
                             <a class="dropdown-item d-flex align-items-center" href="patient.php?page=profile">
-                                <i class="bi bi-person"></i>
+                         
                                 <span>My Profile</span>
                             </a>
                         </li>
@@ -105,7 +82,7 @@ check_session(['patient']);
                         </li>
                         <li>
                             <a class="dropdown-item d-flex align-items-center" href="patient.php?page=settings">
-                                <i class="bi bi-gear"></i>
+                             
                                 <span>Account Settings</span>
                             </a>
                         </li>
@@ -114,8 +91,8 @@ check_session(['patient']);
                         </li>
                         <li>
                             <a class="dropdown-item d-flex align-items-center" href="#" onclick="logout()">
-                                <i class="bi bi-box-arrow-right"></i>
-                                <span>Sign Out</span>
+                             
+                                <span>Log Out</span>
                             </a>
                         </li>
                     </ul>

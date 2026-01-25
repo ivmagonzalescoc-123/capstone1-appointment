@@ -20,7 +20,7 @@ check_session(['admin']);
     <!-- Google Fonts -->
     <link href="https://fonts.gstatic.com" rel="preconnect">
     <link
-        href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+        href="https://fonts.googleapis.com/css?family=Mothwing:300,300i,400,400i,600,600i,700,700i"
         rel="stylesheet">
 
     <!-- Vendor CSS Files -->
@@ -44,19 +44,19 @@ check_session(['admin']);
             <a href="admin.php?page=dashboard" class="logo d-flex align-items-center">
                 <img src="../assets/img/main_logo.png" alt="">
                 <div class="ms-2">
-                    <span class="d-none d-lg-block fw-bold">Dental Clinic</span>
-                    <small class="d-none d-lg-block text-muted">Administrator</small>
+                    <span class="d-none d-lg-block fw-bold">Azucena's Dental Clinic</span>
                 </div>
             </a>
         </div>
 
         <div class="header-search">
-            <input type="text" placeholder="Search..." class="search-input">
+            <input type="text" placeholder="Search..." class="search-input" id="adminSearch" name="search">
             <button class="search-btn">Search</button>
         </div>
 
         <nav class="header-nav ms-auto">
             <ul class="d-flex align-items-center">
+                <small class="d-none d-lg-block text-muted">Administrator</small>
                 <li class="nav-item d-block d-lg-none">
                     <a class="nav-link nav-icon search-bar-toggle" href="#">
                         <i class="bi bi-search"></i>

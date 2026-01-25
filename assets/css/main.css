@@ -18,7 +18,7 @@
 }
 
 body {
-    font-family: 'Open Sans', 'Nunito', 'Poppins', sans-serif;
+    font-family: 'Mothwing', sans-serif;
     background-color: var(--light-bg);
     color: var(--sidebar-text);
     line-height: 1.6;
@@ -245,6 +245,11 @@ body.toggle-sidebar .footer {
 .sidebar-nav .nav-link.active:focus {
     background-color: var(--primary-color) !important;
     color: #fff !important;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18) !important;
+}
+
+.sidebar-nav .nav-link:active {
+    transform: none !important;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18) !important;
 }
 

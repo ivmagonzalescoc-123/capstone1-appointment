@@ -9,7 +9,7 @@ if (isset($_SESSION['user_id']) || isset($_SESSION['patient_id'])) {
     if ($role === 'admin') {
         header('Location: admin/admin.php');
         exit;
-    } elseif ($role === 'dentist') {
+    } elseif ($role === 'doctor') {
         header('Location: doctor/doctor.php');
         exit;
     } elseif ($role === 'secretary') {
@@ -413,9 +413,9 @@ if (isset($_SESSION['user_id']) || isset($_SESSION['patient_id'])) {
 
                     if (role === 'admin') {
                         redirectUrl = 'admin/admin.php';
-                    } else if (role === 'dentist') {
+                    } else if (role === 'doctor') {
                         redirectUrl = 'doctor/doctor.php';
-                    } else if (role === 'receptionist') {
+                    } else if (role === 'secretary') {
                         redirectUrl = 'secretary/secretary.php';
                     } else if (role === 'patient') {
                         redirectUrl = 'patient/patient.php';
